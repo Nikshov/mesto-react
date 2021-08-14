@@ -1,4 +1,4 @@
-function PopupWithForm({ name, title, children, isOpen, onClose}) {
+function PopupWithForm({ name, title, children, isOpen, onClose, buttonText, onSubmit}) {
 
 
   return (
@@ -11,14 +11,14 @@ function PopupWithForm({ name, title, children, isOpen, onClose}) {
           onClick={onClose}
         />
         <h2 className="popup__title">{title}</h2>
-        <form name={name} className="popup__form" autoComplete="on" noValidate>
+        <form name={name} className="popup__form" onSubmit={onSubmit} autoComplete="on">
           {children}
           <button
             type="submit"
             className="popup__save-button"
             aria-label="кнопка отправки формы"
           >
-            Подтвердить
+            {buttonText}
           </button>
         </form>
       </div>

@@ -94,9 +94,7 @@ export class Api {
       .then(this._checkResponse)
   }
 
-  editAvatar({
-    link
-  }) {
+  editAvatar(data) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
       headers: {
@@ -104,7 +102,7 @@ export class Api {
         'Content-Type': this._contentType
       },
       body: JSON.stringify({
-        avatar: `${link}`
+        avatar: `${data.avatar}`
       })
     })
       .then(this._checkResponse)
