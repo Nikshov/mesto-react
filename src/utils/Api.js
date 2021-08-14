@@ -1,4 +1,4 @@
-export class Api {
+export default class Api {
   constructor(obj) {
     this._url = obj.url;
     this._authorization = obj.headers.authorization;
@@ -6,10 +6,10 @@ export class Api {
   }
 
   _checkResponse(res) {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`)
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка: ${res.status}`)
   }
 
   getInitialCards() {

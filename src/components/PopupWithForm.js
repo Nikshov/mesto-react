@@ -1,4 +1,4 @@
-function PopupWithForm({ name, title, children, isOpen, onClose, buttonText, onSubmit}) {
+function PopupWithForm({ name, title, children, isOpen, onClose, buttonText, onSubmit }) {
 
 
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 
-function AddPlacePopup({ isOpen, onClose, onAddPlace}){
+function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
   const inputNameRef = React.useRef(null);
   const inputLinkRef = React.useRef(null);
@@ -11,10 +11,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace}){
     onAddPlace(({ name: inputNameRef.current.value, link: inputLinkRef.current.value }))
   }
 
-  return(
+  return (
     <PopupWithForm onSubmit={handleSubmit} name='add-place' title='Новое место' buttonText='Создать' isOpen={isOpen} onClose={onClose} >
       <input
-      ref={inputNameRef}
+        ref={inputNameRef}
         type="text"
         id="title-input"
         name="name"
@@ -26,7 +26,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace}){
       />
       <span className="popup__input-error popup__input-error_type_title title-input-error" />
       <input
-      ref={inputLinkRef}
+        ref={inputLinkRef}
         type="url"
         id="url-input"
         name="link"
