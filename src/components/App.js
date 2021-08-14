@@ -3,8 +3,8 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import ImagePopup from "./ImagePopup";
-import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import { api } from '../utils/api';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import api from '../utils/api';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
@@ -12,6 +12,7 @@ import AddPlacePopup from './AddPlacePopup';
 function App() {
 
   const [currentUser, setCurrentUser] = React.useState({});
+  const [cards, setCards] = React.useState([]);
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -49,22 +50,24 @@ function App() {
 
   function handleUpdateUser(data) {
     api.editUserInfo(data)
-      .then((data) => setCurrentUser(data))
-      .then(closeAllPopups())
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      })
       .catch((err) => console.error(err))
   }
 
   function handleUpdateAvatar(data) {
-    console.log(`DATA IS ${data}`)
     api.editAvatar(data)
-      .then((data) => setCurrentUser(data))
-      .then(closeAllPopups())
+      .then((data) => {
+        setCurrentUser(data);
+        closeAllPopups()
+      })
       .catch((err) => console.error(err))
   }
 
 
 
-  const [cards, setCards] = React.useState([]);
 
   React.useEffect(() => {
     api.getInitialCards()
@@ -94,12 +97,18 @@ function App() {
       })
   }
   function handleAddPlaceSubmit(data) {
+    let result = null;
     api.addNewCard(data)
-      .then((newCard) => setCards([newCard, ...cards]))
-      .then(closeAllPopups())
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+        return result = true;
+      })
       .catch((err) => {
         console.error(err);
+        return result = false;
       })
+    return result;
   }
 
 
