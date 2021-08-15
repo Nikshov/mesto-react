@@ -12,6 +12,7 @@ import ConfirmDeletePopup from './ConfirmDeletePopup';
 
 
 
+//Реализацией валидации и индикаторов отправки данных сейчас занимаюсь. Но пока отправляю минимальный для сдачи проект.
 function App() {
 
   const [currentUser, setCurrentUser] = React.useState({});
