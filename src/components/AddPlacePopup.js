@@ -20,7 +20,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     setLink('');
   }
 
-  async function handleSubmit(evt) {
+  function handleSubmit(evt) {
     evt.preventDefault();
     onAddPlace({ name, link });
   }
@@ -34,7 +34,6 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   return (
     <PopupWithForm onSubmit={handleSubmit} name='add-place' title='Новое место' buttonText='Создать' isOpen={isOpen} onClose={onClose} >
       <input
-        // ref={inputNameRef}
         type="text"
         id="title-input"
         name="name"
@@ -48,7 +47,6 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       />
       <span className="popup__input-error popup__input-error_type_title title-input-error" />
       <input
-        // ref={inputLinkRef}
         type="url"
         id="url-input"
         name="link"

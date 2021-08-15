@@ -19,14 +19,6 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({ isOpen: false });
 
-  React.useEffect(() => {
-    api.getUserInfo()
-      .then((data) => setCurrentUser(data))
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [])
-
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -67,18 +59,6 @@ function App() {
   }
 
 
-
-
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then((initialCards) => {
-        setCards(initialCards);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [])
-
   function handleCardLike(card, isLiked) {
     (isLiked ? api.deleteLike(card._id) : api.addLike(card._id))
       .then((newCard) => {
@@ -91,25 +71,30 @@ function App() {
 
   function handleCardDelete(card) {
     api.deleteCard(card._id)
-      .then(setCards(cards.filter(item => item !== card)))
-      .catch((err) => {
-        console.error(err);
-      })
+      .then(() => setCards(cards.filter(item => item !== card)), (err) => console.error(err))
   }
+
   function handleAddPlaceSubmit(data) {
-    let result = null;
     api.addNewCard(data)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
-        return result = true;
       })
       .catch((err) => {
         console.error(err);
-        return result = false;
       })
-    return result;
   }
+
+  React.useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then((res) => {
+        setCurrentUser(res[0]);
+        setCards(res[1]);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [])
 
 
   return (
