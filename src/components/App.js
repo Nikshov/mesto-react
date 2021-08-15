@@ -8,6 +8,9 @@ import api from '../utils/api';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import ConfirmDeletePopup from './ConfirmDeletePopup';
+
+
 
 function App() {
 
@@ -18,6 +21,8 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({ isOpen: false });
+  const [request, setRequest] = React.useState(true);
+  const [deleteCard, setDeleteCard] = React.useState({ isOpen: false });
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -34,30 +39,47 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setSelectedCard({ isOpen: false });
+    setDeleteCard({ isOpen: false });
   }
 
   function handleCardClick(card) {
     setSelectedCard({ isOpen: true, ...card });
   }
 
-  function handleUpdateUser(data) {
+  async function handleUpdateUser(data) {
+    setRequest(false);
     api.editUserInfo(data)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
       })
       .catch((err) => console.error(err))
+      .finally(() => { setRequest(true) });
   }
 
   function handleUpdateAvatar(data) {
+    setRequest(false);
     api.editAvatar(data)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups()
       })
       .catch((err) => console.error(err))
+      .finally(() => { setRequest(true) });
   }
 
+  function handleAddPlaceSubmit(data) {
+    setRequest(false);
+    api.addNewCard(data)
+      .then((newCard) => {
+        setCards([newCard, ...cards]);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => { setRequest(true) });
+  }
 
   function handleCardLike(card, isLiked) {
     (isLiked ? api.deleteLike(card._id) : api.addLike(card._id))
@@ -70,19 +92,14 @@ function App() {
   }
 
   function handleCardDelete(card) {
-    api.deleteCard(card._id)
-      .then(() => setCards(cards.filter(item => item !== card)), (err) => console.error(err))
+    setDeleteCard({ isOpen: true, ...card });
   }
 
-  function handleAddPlaceSubmit(data) {
-    api.addNewCard(data)
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
-      })
-      .catch((err) => {
-        console.error(err);
-      })
+  function handleConfirmDelete(card) {
+    setRequest(false);
+    api.deleteCard(card._id)
+      .then(() => setCards(cards.filter(item => item !== card)), (err) => console.error(err))
+      .finally(() => { setRequest(true) });
   }
 
   React.useEffect(() => {
@@ -93,7 +110,7 @@ function App() {
       })
       .catch((err) => {
         console.error(err);
-      });
+      })
   }, [])
 
 
@@ -113,13 +130,15 @@ function App() {
 
       <Footer />
 
-      <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+      <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} request={request} />
 
-      <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+      <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} request={request} />
 
-      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} />
+      <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} request={request} />
 
       <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+
+      <ConfirmDeletePopup deleteCard={deleteCard} onClose={closeAllPopups} request={request} confirmDelete={handleConfirmDelete} />
 
     </CurrentUserContext.Provider>
   );
