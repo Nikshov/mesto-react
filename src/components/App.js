@@ -9,6 +9,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 
+//Реализацией валидации и индикаторов отправки данных сейчас занимаюсь. Но пока отправляю минимальный для сдачи проект.
 function App() {
 
   const [currentUser, setCurrentUser] = React.useState({});
